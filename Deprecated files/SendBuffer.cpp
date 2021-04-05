@@ -1,5 +1,6 @@
 #include "SendBuffer.h"
 
+
 #define NET_BUFFER_STATUS(x) NET_BUFFER_MINIPORT_RESERVED(x)[0]
 #define NB_READY (PVOID)0
 #define NB_SENDING (PVOID)1
