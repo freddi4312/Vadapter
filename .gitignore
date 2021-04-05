@@ -2,12 +2,9 @@
 *.*
 
 # Except this
-!*.cpp
-!*.h
-!*.sln
-!*.vcxproj
-!*.vcxproj.filters
-!.gitignore
-
-# Ignore "Deprecated" dir
-Deprecated/*
+!/*.cpp
+!/*.h
+!/*.sln
+!/*.vcxproj
+!/*.vcxproj.filters
+!/.gitignore
