@@ -50,8 +50,6 @@ void MarkNblReadyAndGetLast(_Inout_ PNET_BUFFER_LIST NetBufferList, _Outptr_ PNE
 
   ASSERTMSG("v SEND_BUFFER2::MarkNblReadyAndGetLast NetBufferList(in end) == nullptr\n", NetBufferList != nullptr);
   *pLastNbl = NetBufferList;
-
-  KdPrint(("v SEND_BUFFER2::MarkNblReadyAndgetLast end\n"));
 }
 
 void SEND_BUFFER2::AddNetBufferList(_Inout_ PNET_BUFFER_LIST NetBufferList)
@@ -65,8 +63,6 @@ void SEND_BUFFER2::AddNetBufferList(_Inout_ PNET_BUFFER_LIST NetBufferList)
   LOCK_STATE LockState;
   NdisAcquireReadWriteLock(&_ReadyRwLock, true, &LockState);
   {
-    KdPrint(("v SEND_BUFFER2::AddNetBufferList locked\n"));
-
     if (_ReadyHead == nullptr)
       _ReadyHead = NetBufferList;
 
@@ -76,9 +72,6 @@ void SEND_BUFFER2::AddNetBufferList(_Inout_ PNET_BUFFER_LIST NetBufferList)
     _ReadyTail = LastNbl;
   }
   NdisReleaseReadWriteLock(&_ReadyRwLock, &LockState);
-  KdPrint(("v SEND_BUFFER2::AddNetBufferList unlocked\n"));
-
-  KdPrint(("v SEND_BUFFER2::AddNetBufferList end\n"));
 }
 
 GET_NB_RES SEND_BUFFER2::GetNetBuffer(_Outptr_result_maybenull_ PNET_BUFFER *pNetBuffer)
@@ -91,8 +84,6 @@ GET_NB_RES SEND_BUFFER2::GetNetBuffer(_Outptr_result_maybenull_ PNET_BUFFER *pNe
   LOCK_STATE LockState;
   NdisAcquireReadWriteLock(&_PendingRwLock, true, &LockState);
   {
-    KdPrint(("v SEND_BUFFER2::GetNetBuffer locked #1\n"));
-
     _IsSmthSent = true;
 
     if (_NbReady == nullptr)
@@ -101,8 +92,6 @@ GET_NB_RES SEND_BUFFER2::GetNetBuffer(_Outptr_result_maybenull_ PNET_BUFFER *pNe
       LOCK_STATE LockState2;
       NdisAcquireReadWriteLock(&_ReadyRwLock, true, &LockState2);
       {
-        KdPrint(("v SEND_BUFFER2::GetNetBuffer locked #2\n"));
-
         if (_ReadyHead == nullptr)
         {
           Result = GET_NB_RES::Nothing;
@@ -116,7 +105,6 @@ GET_NB_RES SEND_BUFFER2::GetNetBuffer(_Outptr_result_maybenull_ PNET_BUFFER *pNe
         }
       }
       NdisReleaseReadWriteLock(&_ReadyRwLock, &LockState2);
-      KdPrint(("v SEND_BUFFER2::GetNetBuffer unlocked #2\n"));
 
       if (Result != GET_NB_RES::Nothing)
       {
@@ -147,9 +135,7 @@ GET_NB_RES SEND_BUFFER2::GetNetBuffer(_Outptr_result_maybenull_ PNET_BUFFER *pNe
     }
   }
   NdisReleaseReadWriteLock(&_PendingRwLock, &LockState);
-  KdPrint(("v SEND_BUFFER2::GetNetBuffer unlocked #1\n"));
 
-  KdPrint(("v SEND_BUFFER2::GetNetBuffer end\n"));
   return Result;
 }
 
@@ -164,8 +150,6 @@ void SEND_BUFFER2::NetBufferConfirmSent(_Inout_ PNET_BUFFER NetBuffer)
   LOCK_STATE LockState;
   NdisAcquireReadWriteLock(&_PendingRwLock, true, &LockState);
   {
-    KdPrint(("v SEND_BUFFER2::NetBufferConfirmSent locked\n"));
-
     if (_PendingHead != nullptr)
     {
       NET_BUFFER_STATUS(NetBuffer) = NB_SENT;
@@ -197,14 +181,11 @@ void SEND_BUFFER2::NetBufferConfirmSent(_Inout_ PNET_BUFFER NetBuffer)
     }
   }
   NdisReleaseReadWriteLock(&_PendingRwLock, &LockState);
-  KdPrint(("v SEND_BUFFER2::NetBufferConfirmSent unlocked\n"));
 
   NdisInterlockedAddUlong(&_SendOkCount, Count, &_SendOkLock);
 
   if (SendList != nullptr)
     NdisMSendNetBufferListsComplete(_NdisMiniportHandle, SendList, 0);
-
-  KdPrint(("v SEND_BUFFER2::NetBufferConfirmSent end\n"));
 }
 
 void SEND_BUFFER2::CancelSend(_In_ PVOID CancelId)
@@ -216,8 +197,6 @@ void SEND_BUFFER2::CancelSend(_In_ PVOID CancelId)
   LOCK_STATE LockState;
   NdisAcquireReadWriteLock(&_ReadyRwLock, true, &LockState);
   {
-    KdPrint(("v SEND_BUFFER2::CancelSend locked\n"));
-
     PNET_BUFFER_LIST Nbl = _ReadyHead;
 
     while (Nbl != nullptr)
@@ -242,12 +221,9 @@ void SEND_BUFFER2::CancelSend(_In_ PVOID CancelId)
       _ReadyTail = nullptr;
   }
   NdisReleaseReadWriteLock(&_ReadyRwLock, &LockState);
-  KdPrint(("v SEND_BUFFER2::CancelSend unlocked\n"));
   
   if (CancelList != nullptr)
     NdisMSendNetBufferListsComplete(_NdisMiniportHandle, CancelList, 0);
-
-  KdPrint(("v SEND_BUFFER2::CancelSend end\n"));
 }
 
 void NblsSetStatus(_Inout_ PNET_BUFFER_LIST Nbl, _In_ NDIS_STATUS Status)

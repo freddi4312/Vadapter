@@ -78,7 +78,7 @@ NTSTATUS VadapterRead(PDEVICE_OBJECT DeviceObject, PIRP Irp)
   {
     ASSERTMSG("v VadapterRead NetBuffer length > BUFFER_SIZE\n", NetBuffer->DataLength <= BUFFER_SIZE);
     Info = NetBuffer->DataLength;
-    PVOID Data = MmGetMdlVirtualAddress(NetBuffer->CurrentMdl);
+    PVOID Data = (PCHAR)MmGetMdlVirtualAddress(NetBuffer->CurrentMdl) + NetBuffer->CurrentMdlOffset;
     memcpy(Buffer, Data, NetBuffer->DataLength);
     ReturnNetBufferSafe(AdapterContext, NetBuffer);
   }

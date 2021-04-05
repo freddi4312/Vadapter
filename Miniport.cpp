@@ -103,16 +103,16 @@ NDIS_STATUS MiniportInitialize(NDIS_HANDLE NdisMiniportHandle, NDIS_HANDLE Minip
     AdapterAttrs.GeneralAttributes.Flags = 0;
     AdapterAttrs.GeneralAttributes.MediaType = NdisMedium802_3;
     AdapterAttrs.GeneralAttributes.PhysicalMediumType = NdisPhysicalMediumUnspecified;
-    AdapterAttrs.GeneralAttributes.MtuSize = BUFFER_SIZE; //check
+    AdapterAttrs.GeneralAttributes.MtuSize = BUFFER_SIZE;
     AdapterAttrs.GeneralAttributes.MaxXmitLinkSpeed = 4'000'000;
     AdapterAttrs.GeneralAttributes.XmitLinkSpeed = 4'000'000;
     AdapterAttrs.GeneralAttributes.MaxRcvLinkSpeed = 4'000'000;
     AdapterAttrs.GeneralAttributes.RcvLinkSpeed = 4'000'000;
     AdapterAttrs.GeneralAttributes.MediaConnectState = MediaConnectStateConnected;
     AdapterAttrs.GeneralAttributes.MediaDuplexState = MediaDuplexStateFull;
-    AdapterAttrs.GeneralAttributes.LookaheadSize = BUFFER_SIZE - 14; //check
+    AdapterAttrs.GeneralAttributes.LookaheadSize = BUFFER_SIZE - 14;
     AdapterAttrs.GeneralAttributes.PowerManagementCapabilities = nullptr;
-    AdapterAttrs.GeneralAttributes.MacOptions = NDIS_MAC_OPTION_COPY_LOOKAHEAD_DATA | NDIS_MAC_OPTION_TRANSFERS_NOT_PEND | NDIS_MAC_OPTION_NO_LOOPBACK; //check
+    AdapterAttrs.GeneralAttributes.MacOptions = NDIS_MAC_OPTION_COPY_LOOKAHEAD_DATA | NDIS_MAC_OPTION_TRANSFERS_NOT_PEND | NDIS_MAC_OPTION_NO_LOOPBACK;
     AdapterAttrs.GeneralAttributes.SupportedPacketFilters = SUPPORTED_PACKET_FILTERS;
     AdapterAttrs.GeneralAttributes.MaxMulticastListSize = MULTICAST_LIST_SIZE;
     AdapterAttrs.GeneralAttributes.MacAddressLength = 6;
@@ -121,9 +121,9 @@ NDIS_STATUS MiniportInitialize(NDIS_HANDLE NdisMiniportHandle, NDIS_HANDLE Minip
     for (int i = 0; i < 6; i++)
       AdapterAttrs.GeneralAttributes.CurrentMacAddress[i] = MacAddrAdapter.Byte[i];
     AdapterAttrs.GeneralAttributes.RecvScaleCapabilities = nullptr;
-    AdapterAttrs.GeneralAttributes.AccessType = NET_IF_ACCESS_BROADCAST; //check
+    AdapterAttrs.GeneralAttributes.AccessType = NET_IF_ACCESS_BROADCAST;
     AdapterAttrs.GeneralAttributes.DirectionType = NET_IF_DIRECTION_SENDRECEIVE;
-    AdapterAttrs.GeneralAttributes.ConnectionType = NET_IF_CONNECTION_DEDICATED; //check
+    AdapterAttrs.GeneralAttributes.ConnectionType = NET_IF_CONNECTION_DEDICATED;
     AdapterAttrs.GeneralAttributes.IfType = IF_TYPE_ETHERNET_CSMACD;
     AdapterAttrs.GeneralAttributes.IfConnectorPresent = FALSE;
     AdapterAttrs.GeneralAttributes.SupportedStatistics = 0;
@@ -132,7 +132,7 @@ NDIS_STATUS MiniportInitialize(NDIS_HANDLE NdisMiniportHandle, NDIS_HANDLE Minip
     AdapterAttrs.GeneralAttributes.ContextBackFillSize = 0;
     AdapterAttrs.GeneralAttributes.SupportedOidList = SupportedOidList;
     AdapterAttrs.GeneralAttributes.SupportedOidListLength = sizeof(SupportedOidList);
-    AdapterAttrs.GeneralAttributes.AutoNegotiationFlags = NDIS_LINK_STATE_DUPLEX_AUTO_NEGOTIATED; //check
+    AdapterAttrs.GeneralAttributes.AutoNegotiationFlags = NDIS_LINK_STATE_DUPLEX_AUTO_NEGOTIATED;
     Status = NdisMSetMiniportAttributes(NdisMiniportHandle, &AdapterAttrs);
     if (Status != NDIS_STATUS_SUCCESS)
       break;
