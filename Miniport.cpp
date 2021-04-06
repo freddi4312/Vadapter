@@ -218,6 +218,7 @@ void MiniportHalt(NDIS_HANDLE MiniportAdapterContext, NDIS_HALT_ACTION)
   NdisAcquireReadWriteLock(&AdapterContext->RwLock, true, &LockState);
   {
     AdapterContext->IsAdapterReady = false;
+    AdapterContext->IsAdapterExist = false;
     AdapterContext->Receive.~RECEIVE_BUFFER();
     AdapterContext->Send.~SEND_BUFFER2();
   }
